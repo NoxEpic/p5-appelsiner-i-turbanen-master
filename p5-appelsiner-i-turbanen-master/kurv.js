@@ -8,7 +8,7 @@ function Kurv(x, y, bredde, dybde, speed) {
      * ud fra dem. Værdierne huskes som hørende til netop 
      * dette objekt ved hjælp af nøgleordet this
      */
-    
+    //Det her der beskevlsen af hvad kurven er 
     this.x = x;
     this.y = y;
     this.bred = bredde;
@@ -20,7 +20,7 @@ function Kurv(x, y, bredde, dybde, speed) {
         fill(this.col);
         rect(this.x, this.y, this.bred, this.dyb);
     }
-
+    //det her er den måde kkurven bevæere sig på
     this.move = function(tast) {
         if (tast == 'w' || tast== 'W') {
             this.y -= this.speed;
@@ -29,7 +29,6 @@ function Kurv(x, y, bredde, dybde, speed) {
         if (tast == 's' || tast == 'S') {
             this.y += this.speed;
             if (this.y > height-this.dyb) {this.y = height - this.dyb};
-            
         }
         if (tast == 'a' || tast == 'A') {
             this.x -= this.speed;
@@ -39,10 +38,8 @@ function Kurv(x, y, bredde, dybde, speed) {
             this.x += this.speed;
             if (this.x > width-this.bred) {this.x = width - this.bred};
         }
-
-
     }
-
+    // den her function holder øje med når appelsien rammer ned i kurven
     this.grebet = function(xa, ya, ra) {
         if ((ya < this.y+5 && ya > this.y-5) && xa > this.x+ra && xa < this.x+this.bred-ra) {
             return true;
@@ -51,9 +48,9 @@ function Kurv(x, y, bredde, dybde, speed) {
             return false;
         }
     }
-
+    // det her er mit forså på at få en function til at holde øje med når appelsien ikke rammer
     this.misst = function(xa, ya, ra) {
-        if ((ya < this.y+5 && ya > this.y-5) && xa > this.x+ra && xa < this.x+this.bred-ra) {
+        if ((ya < this.y-5 && ya > this.y+5) && xa > this.x+ra && xa < this.x+this.bred-ra) {
             return false;;
         }
         else {
