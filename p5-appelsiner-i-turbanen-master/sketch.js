@@ -4,14 +4,13 @@ Først laver vi et nogle variable til at lave en appelsin
 */
 
 // Appelsinen
-var x = 0; 
+var x = 0;
 var y = 550;
-//var rad = 20;
 var xspeed = 4;
 var yspeed = -10;
 var newspeed;
 var grav = 0.1;
-//var col = [200,100,0];
+
 
 // Turbanen
 var turban;
@@ -29,7 +28,6 @@ var socket;
  */
 function setup() {
     createCanvas(windowWidth, windowHeight);
-    //x = rad;
     turban = new Kurv(windowWidth - 100, 100, 150, 50, 10);
 
     if (confirm('Vil du spille et igangværende spil?')) {
@@ -65,28 +63,23 @@ function display() {
     for (var i = 0; i < appelsiner.length; i++) {
         const appelsin = appelsiner[i];
         appelsin.display();
-    } 
+    }
 
     // Her vises turbanen - foreløbig blot en firkant
     turban.tegn();
 
     fill(255);
-    text("Score: "+score, width-80, 30);
-    text("Miss: "+miss, width-80, 60);
+    text("Score: " + score, width - 80, 30);
+    text("Miss: " + miss, width - 80, 60);
     text("Pin: " + socket.id, width - 80, 90);
-    
-    
+
+
     //Her skal vi sørge for at appelsinen bliver vist, hvis den skal vises
-    if(tid > 0) {
+    if (tid > 0) {
         tid -= 1;
     }
-/*     if (tid < 100) {
-        fill(col);
-        ellipse(x, y, rad*2, rad*2);
-    } */
- 
 }
-    
+
 function move() {
     //Her skal vi sørge for at appelsinen bevæger sig, hvis den er startet
     for (var i = 0; i < appelsiner.length; i++) {
@@ -114,21 +107,20 @@ function checkScore() {
         }
     }
 }
+
 function checkMiss() {
     // Her checkes om turbanen har fanget appelsinen. Hvis ja, skydes en ny appelsin afsted
     if (yspeed > 0) {
         if (turban.misst(x, y, rad)) {
             miss += 1;
-            
-        
         }
     }
 }
 
 function shootNew(y) {
     //Her skal vi sørge for at en ny appelsin skydes afsted 
-   // const dx = 6 * Math.random();
-   // const dy = -15 * Math.random();
+    // const dx = 6 * Math.random();
+    // const dy = -15 * Math.random();
     appelsiner.push(new Appelsin(y, dx, dy));
 }
 
@@ -136,14 +128,13 @@ function keyPressed() {
     turban.tegn(key);
 }
 
-function mousePressed(){
-}
+function mousePressed() {}
 //prøver at få shootNew til at skyde en bolde på en ande skæme
 function mouseClicked() {
     socket.sendMessage({
         type: 'shootNew',
         y: mouseY,
-        
+
     });
 }
 

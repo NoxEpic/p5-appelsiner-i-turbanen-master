@@ -28,6 +28,6 @@ class Appelsin {
     }
 
     isOutOfBounds() {
-        return this.x > windowWidth || this.y > windowHeight;
+        return this.x > windowWidth || this.y > windowHeight;
     }
 }
