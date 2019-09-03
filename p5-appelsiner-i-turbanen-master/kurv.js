@@ -16,6 +16,7 @@ class Kurv {
         this.dyb = dybde;
         this.speed = speed;
         this.col = [250, 230, 150];
+        this.img = loadImage('turban.png');
     }
 
     tegn() {
@@ -41,14 +42,6 @@ class Kurv {
             return true;
         } else {
             return false;
-        }
-    }
-    // det her er mit forså på at få en function til at holde øje med når appelsien ikke rammer
-    misst = function (xa, ya, ra) {
-        if ((ya < this.y - 5 && ya > this.y + 5) && xa > this.x + ra && xa < this.x + this.bred - ra) {
-            return false;;
-        } else {
-            return true;
         }
     }
 }

@@ -4,10 +4,7 @@ Først laver vi et nogle variable til at lave en appelsin
 */
 
 // Appelsinen
-var x = 0;
-var y = 550;
-var xspeed = 4;
-var yspeed = -10;
+
 var newspeed;
 var grav = 0.1;
 
@@ -15,10 +12,14 @@ var grav = 0.1;
 // Turbanen
 var turban;
 
+var header;
+
 // Øvrige
-var tid = 200;
+var tid = 10;
 var score = 0;
-var miss = 0;
+var missed = 0;
+var spil = true;
+var knap;
 
 var appelsiner = [];
 var socket;
@@ -27,16 +28,53 @@ var socket;
  * her prøvet at setup canvas  og  pin så man kan spille sammen med der virker ikke helt
  */
 function setup() {
-    createCanvas(windowWidth, windowHeight);
-    turban = new Kurv(windowWidth - 100, 100, 150, 50, 10);
 
-    if (confirm('Vil du spille et igangværende spil?')) {
-        var pin = prompt('Pin:');
-        socket = ElineSocket.connect(pin);
+    var status = document.getElementById('status');
+
+    //laver en if kommand som stopper spillet hvis man får for mange misses
+    if (spil) {
+        // Skaber informations diven
+        status.innerHTML = 'spillet er i gang';
+
+        //Skaber canvas
+        createCanvas(windowWidth, windowHeight);
+
+        //Skaber headeren
+        header = createElement('h1', 'Appelsiner i turban')
+
+        //kalder kurven 
+        turban = new Kurv(windowWidth / 2, windowHeight - 100, 150, 50, 10);
+
+        //gør klar til at have multiplayer
+        // Starter med en alert
+        if (confirm('Vil du joine et igangværende spil?')) {
+            //En prompt til en pin fra den anden computer
+            var pin = prompt('Pin:');
+            socket = ElineSocket.connect(pin);
+        } else {
+            //skaber en pin som kan indsættes i den anden prompt
+            socket = ElineSocket.create();
+        }
+        socket.onMessage(handleMessage);
     } else {
-        socket = ElineSocket.create();
+        //ændre informations diven til en taber tekst
+        document.getElementById('status').innerHTML = 'Du tabte';
+
+        //skaber en genstart knap
+        status.createButton('Restart?')
+        status.position(windowWidth / 2, windowHeight / 2);
+        status.mousePressed(Genstartspillet);
+
+
     }
-    socket.onMessage(handleMessage);
+    //diffinere hvordan spill bliver false
+    if (missed > 3) {
+        spil = false;
+    }
+}
+
+function Genstartspillet() {
+    location.reload();
 }
 //den får b og sender shootNew til den anden spiller  
 function handleMessage(msg) {
@@ -50,11 +88,23 @@ function handleMessage(msg) {
 }
 
 function draw() {
-    background(0);
-    move();
-    checkScore();
-    checkMiss();
-    display();
+    if (spil) {
+
+        background(0);
+        move();
+        checkScore();
+        display();
+
+    } else {
+
+        document.getElementById('status').innerHTML = 'Din taber';
+        knap = createButton('Restart?');
+        knap.position(300, 325);
+        knap.mousePressed(Genstartspillet);
+    }
+    if (missed > 2) {
+        spil = false;
+    }
 }
 
 //Viser background
@@ -70,14 +120,11 @@ function display() {
 
     fill(255);
     text("Score: " + score, width - 80, 30);
-    text("Miss: " + miss, width - 80, 60);
+    text("Missed: " + missed, width - 80, 60);
     text("Pin: " + socket.id, width - 80, 90);
 
 
     //Her skal vi sørge for at appelsinen bliver vist, hvis den skal vises
-    if (tid > 0) {
-        tid -= 1;
-    }
 }
 
 function move() {
@@ -108,27 +155,15 @@ function checkScore() {
     }
 }
 
-function checkMiss() {
-    // Her checkes om turbanen har fanget appelsinen. Hvis ja, skydes en ny appelsin afsted
-    if (yspeed > 0) {
-        if (turban.misst(x, y, rad)) {
-            miss += 1;
-        }
-    }
-}
 
 function shootNew(y) {
     //Her skal vi sørge for at en ny appelsin skydes afsted 
-    // const dx = 6 * Math.random();
-    // const dy = -15 * Math.random();
+    const dx = 6 * Math.random();
+    const dy = -15 * Math.random();
     appelsiner.push(new Appelsin(y, dx, dy));
 }
 
-function keyPressed() {
-    turban.tegn(key);
-}
 
-function mousePressed() {}
 //prøver at få shootNew til at skyde en bolde på en ande skæme
 function mouseClicked() {
     socket.sendMessage({
