@@ -24,7 +24,7 @@ var appelsiner = [];
 var socket;
 
 /* 
- * her prøvet at setup canvas  og  pin så man kan spille sammen med der virker ikke
+ * her prøvet at setup canvas  og  pin så man kan spille sammen med der virker ikke helt
  */
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -38,7 +38,7 @@ function setup() {
     }
     socket.onMessage(handleMessage);
 }
-
+//den får b og sender shootNew til den anden spiller  
 function handleMessage(msg) {
     switch (msg.type) {
         case 'shootNew':
